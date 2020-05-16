@@ -64,6 +64,10 @@ describe('test onready', () => {
     })
 })
 describe('answer selection', () => {
+    beforeAll(() => {
+        let view = learnjs.problemView('1');
+        this.view = view
+    })
     it('can check a correct answer by hitting a button', () => {
         view.find('.answer').val('true');
         view.find('.check-btn').click();
