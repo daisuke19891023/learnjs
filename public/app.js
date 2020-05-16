@@ -28,13 +28,20 @@ learnjs.problemView = (data) => {
     }
     const checkAnswerClick = () => {
         if (checkAnswer()) {
-            const correctFlash = learnjs.tempate('correct-flash');
-            correctFlash.find('a').attr('href', '#problem-' + (problemNumber + 1));
+            const correctFlash = learnjs.buildCorrectFlash(problemNumber)
             learnjs.flashElement(resultFlash, correctFlash);
         } else {
             learnjs.flashElement(resultFlash, 'Incorrect!');
         }
         return false
+    }
+    if (problemNumber < learnjs.problems.length) {
+        const buttonItem = learnjs.tempate('skip-btn');
+        buttonItem.find('a').attr('href', '#problem-' + (problemNumber + 1));
+        $('.nav-list').append(buttonItem);
+        view.bind('removingView', () => {
+            buttonItem.remove();
+        })
     }
 
     view.find('.check-btn').click(checkAnswerClick);
@@ -51,15 +58,18 @@ learnjs.showView = (hash) => {
     const hashParts = hash.split('-');
     const viewFn = routes[hashParts[0]];
     if (viewFn) {
+        learnjs.triggerEvent('removingView', []);
         $('.view-container').empty().append(viewFn(hashParts[1]));
     }
+
+
 }
 
 
-learnjs.buildCorrectFlash = (problemNum) => {
+learnjs.buildCorrectFlash = (problemNumber) => {
     const correctFlash = learnjs.tempate('correct-flash');
     let link = correctFlash.find('a');
-    if (problemNum < learnjs.problems.length) {
+    if (problemNumber < learnjs.problems.length) {
         link.attr('href', '#problem-' + (problemNumber + 1));
     } else {
         link.attr('href', '');
@@ -87,4 +97,8 @@ learnjs.flashElement = (elem, content) => {
         elem.html(content);
         elem.fadeIn();
     })
+}
+
+learnjs.triggerEvent = (name, args) => {
+    $('.view-container>*').trigger(name, args)
 }

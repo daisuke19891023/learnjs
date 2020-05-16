@@ -64,14 +64,14 @@ describe('test onready', () => {
     })
 })
 describe('answer selection', () => {
-    beforeAll(() => {
+    beforeEach(() => {
         let view = learnjs.problemView('1');
         this.view = view
     })
     it('can check a correct answer by hitting a button', () => {
         view.find('.answer').val('true');
         view.find('.check-btn').click();
-        expect(view.find('.result').text()).toEqual('Correct!');
+        expect(view.find('.result').text().trim()).toEqual('Correct! Next Problem');
     })
     it('rejects an incorrect answer', () => {
         view.find('.answer').val('false');
