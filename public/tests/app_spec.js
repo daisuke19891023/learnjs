@@ -14,11 +14,38 @@ describe('LearnJS', () => {
     })
 })
 
-describe('problem view', () => {
+describe('problem view 1', () => {
+    beforeAll(() => {
+        let view = learnjs.problemView('1');
+        this.view = view
+    })
     it('has a  title that includes the problem number', () => {
-        const view = learnjs.problemView('1');
-        expect(view.text()).toEqual('Problem #1 Coming soon!');
+        expect(view.find('.title').text()).toEqual('Problem #1');
 
+    })
+    it('show the desicription', () => {
+        expect(view.find('[data-name="description"]').text()).toEqual('What is truth?');
+    })
+    it('show the desicription', () => {
+        expect(view.find('[data-name="code"]').text()).toEqual('function problem() { return __; }');
+    })
+
+})
+
+describe('problem view 2', () => {
+    beforeAll(() => {
+        let view = learnjs.problemView('2');
+        this.view = view
+    })
+    it('has a  title that includes the problem number', () => {
+        expect(view.find('.title').text()).toEqual('Problem #2');
+
+    })
+    it('show the desicription', () => {
+        expect(view.find('[data-name="description"]').text()).toEqual('Simple Math');
+    })
+    it('show the desicription', () => {
+        expect(view.find('[data-name="code"]').text()).toEqual('function problem() { return 42 === 6 * __; }');
     })
 
 })
@@ -34,5 +61,21 @@ describe('test onready', () => {
         spyOn(learnjs, 'showView');
         $(window).trigger('hashchange');
         expect(learnjs.showView).toHaveBeenCalledWith(window.location.hash);
+    })
+})
+describe('answer selection', () => {
+    beforeEach(() => {
+        let view = learnjs.problemView('1');
+        this.view = view
+    })
+    it('can check a correct answer by hitting a button', () => {
+        view.find('.answer').val('true');
+        view.find('.check-btn').click();
+        expect(view.find('.result').text().trim()).toEqual('Correct! Next Problem');
+    })
+    it('rejects an incorrect answer', () => {
+        view.find('.answer').val('false');
+        view.find('.check-btn').click();
+        expect(view.find('.result').text()).toEqual('Incorrect!');
     })
 })
